@@ -2,6 +2,8 @@ package com.znw.bianyiyuanli;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 
@@ -40,26 +42,29 @@ import java.util.Scanner;
 //        volatile：32
 //        数字：33
 //        分界符：34
-//        变量：35
-
-public class LexicalAnalyzer {
-
+//        无识别符：35
+//        运算符：36
+//        变量：37
+public class LexicalAnalyzer  {
+    //编译前准备
     String keyWord[] = {"char","double","enum","float","int","long","short","signed","struct",
             "union","unsigned","void","for","do","while","break","contionue","if","else","goto",
             "switch","case","default","return","auto","extern","register","static","const","sizeof",
             "typedef","volatile"};
     char ch;
 
-    //判断是否是关键字
-    boolean isKeyWord(String str)
-    {
+    
+
+    //返回字符串中关键字对应关键字表的位置
+    int KeyWordNumber(String str){
         for(int i = 0;i < keyWord.length;i++)
         {
             if(keyWord[i].equals(str))
-                return true;
+                return i+1;
         }
-        return false;
+        return 0;
     }
+
     //判断是否是字母
     boolean isLetter(char letter)
     {
@@ -77,8 +82,22 @@ public class LexicalAnalyzer {
             return false;
     }
     //词法分析
-    void lexicalanalyze(char[] chars)
+    void lexicalanalyze(char[] chars) throws IOException
     {
+        //创建新文件用以存储词法分析信息
+        String outputfile = "/Users/znw_mac/Downloads/output.txt";
+        File myFile = new File(outputfile);
+        FileWriter fw = new FileWriter(myFile,true);
+        if (!myFile.exists()) {
+            // 创建文件(前提是目录已存在，若不在，需新建目录即文件夹)
+            myFile.createNewFile();
+
+            // 删除文件
+            myFile.delete();
+        }
+
+
+
         String arr = "";
         for(int i = 0;i< chars.length;i++) {
             ch = chars[i];
@@ -91,14 +110,15 @@ public class LexicalAnalyzer {
                 }
                 //回退一个字符
                 i--;
-                if(isKeyWord(arr)){
+                if(KeyWordNumber(arr) != 0){
                     //关键字
-                    System.out.println(arr+"\t4"+"\t关键字");
+                    fw.write("< "+arr+"\t,\t"+KeyWordNumber(arr)+">\n");
                 }
-                else{
-                    //标识符
-                    System.out.println(arr+"\t4"+"\t标识符");
+                else {
+                    //变量
+                    fw.write("< "+arr+"\t,\t37>\n");
                 }
+
             }
             else if(isDigit(ch)||(ch == '.'))
             {
@@ -109,59 +129,71 @@ public class LexicalAnalyzer {
                     ch = chars[++i];
                 }
                 //属于无符号常数
-                System.out.println(arr+"\t5"+"\t常数");
+                fw.write("< "+arr+"\t,\t33>\n");
             }
             else switch(ch){
                     //运算符
-                    case '+':System.out.println(ch+"\t2"+"\t运算符");break;
-                    case '-':System.out.println(ch+"\t2"+"\t运算符");break;
-                    case '*':System.out.println(ch+"\t2"+"\t运算符");break;
-                    case '/':System.out.println(ch+"\t2"+"\t运算符");break;
+                    case '+':
+                    case '-':
+                    case '*':
+                    case '/':
+                        fw.write("< "+ch+"\t,\t36>\n");
+                        break;
                     //分界符
-                    case '(':System.out.println(ch+"\t3"+"\t分界符");break;
-                    case ')':System.out.println(ch+"\t3"+"\t分界符");break;
-                    case '[':System.out.println(ch+"\t3"+"\t分界符");break;
-                    case ']':System.out.println(ch+"\t3"+"\t分界符");break;
-                    case ';':System.out.println(ch+"\t3"+"\t分界符");break;
-                    case '{':System.out.println(ch+"\t3"+"\t分界符");break;
-                    case '}':System.out.println(ch+"\t3"+"\t分界符");break;
+                    case '(':
+                    case ')':
+                    case '[':
+                    case ']':
+                    case ';':
+                    case '{':
+                    case '}':
+                        fw.write("< "+ch+"\t,\t34>\n");
+                        break;
                     //运算符
                     case '=':{
                         ch = chars[++i];
-                        if(ch == '=')System.out.println("=="+"\t2"+"\t运算符");
+                        if(ch == '=') {
+                            fw.write("< ==\t,\t36>\n");
+                        }
+
                         else {
-                            System.out.println("="+"\t2"+"\t运算符");
+                            fw.write("< =\t,\t36>\n");
                             i--;
                         }
                     }break;
                     case ':':{
                         ch = chars[++i];
-                        if(ch == '=')System.out.println(":="+"\t2"+"\t运算符");
+                        if(ch == '=')
+                            fw.write("< :=\t,\t36>\n");
                         else {
-                            System.out.println(":"+"\t2"+"\t运算符");
+                            fw.write("< :\t,\t36>\n");
                             i--;
                         }
                     }break;
                     case '>':{
                         ch = chars[++i];
-                        if(ch == '=')System.out.println(">="+"\t2"+"\t运算符");
+                        if(ch == '=')
+                            fw.write("< >=\t,\t36>\n");
                         else {
-                            System.out.println(">"+"\t2"+"\t运算符");
+                            fw.write("< >\t,\t36>\n");
                             i--;
                         }
                     }break;
                     case '<':{
                         ch = chars[++i];
-                        if(ch == '=')System.out.println("<="+"\t2"+"\t运算符");
+                        if(ch == '=')
+                            fw.write("< <=\t,\t36>\n");
                         else {
-                            System.out.println("<"+"\t2"+"\t运算符");
+                            fw.write("< <\t,\t36>\n");
                             i--;
                         }
                     }break;
                     //无识别
-                    default: System.out.println(ch+"\t6"+"\t无识别符");
+                    default:
+                        fw.write("< "+ch+"\t,\t35>\n");
                 }
         }
+        fw.close();
     }
 
     public static void main(String[] args) throws Exception {
