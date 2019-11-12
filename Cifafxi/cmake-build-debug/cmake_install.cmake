@@ -1,4 +1,4 @@
-# Install script for directory: /Users/znw_mac/CLionProjects/Cifafxi
+# Install script for directory: /Users/znw_mac/GitRepository/bianyiyuanli/Cifafxi
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,5 +35,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/znw_mac/CLionProjects/Cifafxi/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/znw_mac/GitRepository/bianyiyuanli/Cifafxi/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
